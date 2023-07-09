@@ -23,6 +23,12 @@ public class ApplicationController extends AbstractController {
         return ok(applicationService.get(applicationId));
     }
 
+    @DeleteMapping("/{applicationId}")
+    public ResponseDTO<Void> delete(@PathVariable Long applicationId) {
+        applicationService.delete(applicationId);
+        return ok();
+    }
+
 
 
 }

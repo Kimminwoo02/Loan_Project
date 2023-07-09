@@ -11,7 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -41,15 +41,14 @@ public class ApplicationServiceImpl implements ApplicationService {
         return modelMapper.map(application, Response.class);
 
     }
-<<<<<<< HEAD
+
 
     @Override
     public Response update(Long applicationId, Request request) {
         Application application = applicationRepository.findById(applicationId).orElseThrow(() -> {
             throw new BaseException(ResultType.SYSTEM_ERROR);
         });
-=======
->>>>>>> master
+
 
         application.setName(request.getName());
         application.setCellPhone(request.getCellPhone());
@@ -57,5 +56,16 @@ public class ApplicationServiceImpl implements ApplicationService {
         application.setHopeAmount(request.getHopeAmount());
 
         return modelMapper.map(application, Response.class);
+    }
+
+    @Override
+    public void delete(Long applicationId) {
+        Application application = applicationRepository.findById(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        application.setIsDeleted(true);
+
+        applicationRepository.save(application);
     }
 }
