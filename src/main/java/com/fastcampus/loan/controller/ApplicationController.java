@@ -1,11 +1,14 @@
 package com.fastcampus.loan.controller;
 
+import com.fastcampus.loan.dto.ApplicationDTO;
 import com.fastcampus.loan.dto.ApplicationDTO.Request;
 import com.fastcampus.loan.dto.ApplicationDTO.Response;
 import com.fastcampus.loan.dto.ResponseDTO;
 import com.fastcampus.loan.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import static com.fastcampus.loan.dto.ApplicationDTO.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,6 +32,10 @@ public class ApplicationController extends AbstractController {
         return ok();
     }
 
+    @PostMapping("/{applicationId}/terms")
+    public ResponseDTO<Boolean> acceptTerms(@PathVariable Long applicationId, @RequestBody AcceptTerms request){
+        return ok(applicationService.acceptTerms(applicationId,request));
+    }
 
 
 }
