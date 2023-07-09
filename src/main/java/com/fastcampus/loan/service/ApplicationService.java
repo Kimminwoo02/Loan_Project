@@ -8,6 +8,9 @@ public interface ApplicationService {
 
     Response create(Request request);
     Response get(Long Id);
+<<<<<<< HEAD
 
     Response update(Long applicationId, Request request);
+=======
+>>>>>>> master
 }

@@ -70,6 +70,7 @@ public class ApplicationServiceTest {
 
         assertThat(actual.getApplicationId()).isSameAs(findId);
     }
+<<<<<<< HEAD
 
     @Test
     void Should_returnUpdatedResponseOfExistApplicationEntity_when_RequestUpdateExistApplicationInfo(){
@@ -94,4 +95,6 @@ public class ApplicationServiceTest {
         assertThat(actual.getApplicationId()).isSameAs(findId);
         assertThat(actual.getHopeAmount()).isSameAs(request.getHopeAmount());
     }
+=======
+>>>>>>> master
 }

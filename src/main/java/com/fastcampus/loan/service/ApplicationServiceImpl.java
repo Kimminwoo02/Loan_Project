@@ -41,12 +41,15 @@ public class ApplicationServiceImpl implements ApplicationService {
         return modelMapper.map(application, Response.class);
 
     }
+<<<<<<< HEAD
 
     @Override
     public Response update(Long applicationId, Request request) {
         Application application = applicationRepository.findById(applicationId).orElseThrow(() -> {
             throw new BaseException(ResultType.SYSTEM_ERROR);
         });
+=======
+>>>>>>> master
 
         application.setName(request.getName());
         application.setCellPhone(request.getCellPhone());
