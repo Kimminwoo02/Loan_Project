@@ -23,7 +23,7 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-      location: C:\Users\made_\Desktop\Loan
+      location: C:\Users\made_\Desktop\Loan\file
 
 logging.level:
   org.hibernate.SQL: debug
