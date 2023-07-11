@@ -43,6 +43,23 @@ public class EntryServiceImpl implements EntryService{
 
         return modelMapper.map(entry,Response.class);
     }
+
+
+    @Override
+    public Response get(Long applicationId) {
+        Optional<Entry> entry = entryRepository.findByApplicationId(applicationId);
+        if(entry.isPresent()){
+            return modelMapper.map(entry,Response.class);
+        }else{
+            return null;
+        }
+    }
+
+
+
+
+
+
     private boolean isContractedApplication(Long applicationId){
 
         Optional<Application> existed = applicationRepository.findById(applicationId);
@@ -52,4 +69,6 @@ public class EntryServiceImpl implements EntryService{
 
         return existed.get().getContractedAt() != null;
     }
+
+
 }
