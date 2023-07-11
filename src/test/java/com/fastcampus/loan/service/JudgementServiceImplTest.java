@@ -1,6 +1,7 @@
 package com.fastcampus.loan.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.when;
 
 import com.fastcampus.loan.domain.Application;
@@ -93,5 +94,26 @@ class JudgementServiceImplTest {
 
     }
 
+    @Test
+    void Should_ReturnUpdatedResponseOfExistJudgementEntity_WhenRequestUpdateExistJudgementInfo(){
+        Judgement entity =Judgement.builder()
+                .judgementId(1L)
+                .name("미누1")
+                .approvalAmount(BigDecimal.valueOf(50000000))
+                .build();
+
+        Request request = Request.builder()
+                .name("미누2")
+                .approvalAmount(BigDecimal.valueOf(10000000))
+                .build();
+
+        when(judgementRepository.findById(1L)).thenReturn(Optional.ofNullable(entity));
+        when(judgementRepository.save(ArgumentMatchers.any(Judgement.class))).thenReturn(entity);
+        Response actual = judgementService.update(1L, request);
+
+        assertThat(actual.getJudgementId()).isSameAs(1L);
+        assertThat(actual.getName()).isSameAs(request.getName());
+        assertThat(actual.getApprovalAmount()).isSameAs(request.getApprovalAmount());
+    }
 
 }

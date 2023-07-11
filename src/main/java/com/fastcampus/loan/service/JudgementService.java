@@ -8,4 +8,6 @@ public interface JudgementService {
 
     Response get(Long judgementId);
     Response getJudgementOfApplication (Long applicationId);
+
+    Response update(Long judgementId, Request request);
 }
