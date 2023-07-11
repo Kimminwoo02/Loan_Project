@@ -38,4 +38,24 @@ public class JudgementServiceImpl implements JudgementService{
     private boolean isPresentApplication(Long applicationId){
         return applicationRepository.findById(applicationId).isPresent();
     }
+
+    @Override
+    public Response get(Long judgementId) {
+        Judgement judgement = judgementRepository.findById(judgementId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+        return modelMapper.map(judgement, Response.class);
+    }
+
+    @Override
+    public Response getJudgementOfApplication(Long applicationId) {
+        if(!isPresentApplication(applicationId)){
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        }
+        Judgement judgement = judgementRepository.findByApplicationId(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        return modelMapper.map(judgement,Response.class);
+    }
 }

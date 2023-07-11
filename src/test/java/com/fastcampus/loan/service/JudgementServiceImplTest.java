@@ -61,4 +61,37 @@ class JudgementServiceImplTest {
     }
 
 
+    @Test
+    void Should_ReturnResponseOfExistJudgementEntity_when_requestExistJudgement(){
+        Judgement entity = Judgement.builder()
+                .judgementId(1L)
+                .build();
+        when(judgementRepository.findById(1L)).thenReturn(Optional.ofNullable(entity));
+
+        Response actual = judgementService.get(1L);
+
+        assertThat(actual.getJudgementId()).isSameAs(1L);
+    }
+
+    @Test
+    void Should_ReturnResponseOfExistJudgementEntity_When_RequestExistApplicationId(){
+
+        Judgement judgementEntity = Judgement.builder()
+                .judgementId(1L)
+                .build();
+
+        Application applicationEntity = Application.builder()
+                .applicationId(1L)
+                .build();
+
+        when(applicationRepository.findById(1L)).thenReturn(Optional.ofNullable(applicationEntity));
+        when(judgementRepository.findByApplicationId(1L)).thenReturn(Optional.ofNullable(judgementEntity));
+
+        Response actual = judgementService.getJudgementOfApplication(1L);
+
+        assertThat(actual.getJudgementId()).isSameAs(1L);
+
+    }
+
+
 }
