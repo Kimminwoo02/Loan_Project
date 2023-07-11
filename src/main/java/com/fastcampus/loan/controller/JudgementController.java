@@ -1,11 +1,15 @@
 package com.fastcampus.loan.controller;
 
+import com.fastcampus.loan.dto.ApplicationDTO;
 import com.fastcampus.loan.dto.JudgementDTO;
-import com.fastcampus.loan.dto.JudgementDTO.*;
+import com.fastcampus.loan.dto.JudgementDTO.Request;
+import com.fastcampus.loan.dto.JudgementDTO.Response;
 import com.fastcampus.loan.dto.ResponseDTO;
 import com.fastcampus.loan.service.JudgementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import static com.fastcampus.loan.dto.ApplicationDTO.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,6 +41,11 @@ public class JudgementController extends AbstractController{
     public ResponseDTO<Void> delete(@PathVariable Long judgementId){
         judgementService.delete(judgementId);
         return ok();
+    }
+
+    @PatchMapping("/{judgementId}/grants")
+    public ResponseDTO<GrantAmount> grant(@PathVariable Long judgementId){
+        return ok(judgementService.grant(judgementId));
     }
 
 

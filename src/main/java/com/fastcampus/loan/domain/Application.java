@@ -54,5 +54,7 @@ public class Application extends BaseEntity {
 
     @Column(columnDefinition = "datetime DEFAULT NULL COMMENT '약정일자'")
     private LocalDateTime contractedAt;
+
+
 }
 

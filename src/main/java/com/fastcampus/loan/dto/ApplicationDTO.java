@@ -77,4 +77,5 @@ public class ApplicationDTO implements Serializable {
 
         private LocalDateTime updatedAt;
     }
+
 }
