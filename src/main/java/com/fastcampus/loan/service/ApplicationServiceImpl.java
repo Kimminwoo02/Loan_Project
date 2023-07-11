@@ -10,12 +10,14 @@ import com.fastcampus.loan.exception.BaseException;
 import com.fastcampus.loan.exception.ResultType;
 import com.fastcampus.loan.repository.AcceptTermsRepository;
 import com.fastcampus.loan.repository.ApplicationRepository;
+import com.fastcampus.loan.repository.JudgementRepository;
 import com.fastcampus.loan.repository.TermsRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +30,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final TermsRepository termsRepository;
     private final AcceptTermsRepository acceptTermsRepository;
+    private final JudgementRepository judgementRepository;
 
 
     private final ModelMapper modelMapper;
@@ -111,7 +114,30 @@ public class ApplicationServiceImpl implements ApplicationService {
 
             acceptTermsRepository.save(accepted);
         }
-
         return true;
+    }
+
+    @Override
+    public Response contract(Long applicationId) {
+        // 신청 정보 체크
+        Application application = applicationRepository.findById(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        //심사 정보 체크
+        judgementRepository.findByApplicationId(applicationId).orElseThrow(()-> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        // 승인 금액 > 0
+        if (application.getApprovalAmount() == null || application.getApprovalAmount().compareTo(BigDecimal.ZERO)==0){
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        }
+
+        // 계약 체결
+        application.setContractedAt(LocalDateTime.now());
+        applicationRepository.save(application);
+
+        return null;
     }
 }
