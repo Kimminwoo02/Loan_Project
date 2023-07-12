@@ -3,7 +3,7 @@ package com.fastcampus.loan.service;
 import com.fastcampus.loan.domain.Application;
 import com.fastcampus.loan.domain.Entry;
 import com.fastcampus.loan.domain.Repayment;
-import com.fastcampus.loan.dto.BalanceDTO;
+import com.fastcampus.loan.dto.BalanceDTO.*;
 import com.fastcampus.loan.dto.RepaymentDTO;
 import com.fastcampus.loan.exception.BaseException;
 import com.fastcampus.loan.exception.ResultType;
@@ -14,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.fastcampus.loan.dto.BalanceDTO.*;
 import static com.fastcampus.loan.dto.BalanceDTO.RepaymentRequest.*;
@@ -53,10 +55,13 @@ public class RepaymentServiceImpl implements RepaymentService{
 
     }
 
+    @Override
+    public List<RepaymentDTO.ListResponse> get(Long applicationId) {
+        List<Repayment> repayments = repaymentRepository.findAllByApplicationId(applicationId);
 
+        return repayments.stream().map(r->modelMapper.map(r, RepaymentDTO.ListResponse.class)).collect(Collectors.toList());
 
-
-
+    }
 
     private boolean isRepayableApplication(Long applicationId){
         Optional<Application> application = applicationRepository.findById(applicationId);
@@ -70,4 +75,5 @@ public class RepaymentServiceImpl implements RepaymentService{
         Optional<Entry> entry = entryRepository.findByApplicationId(applicationId);
         return entry.isPresent();
     }
+
 }
