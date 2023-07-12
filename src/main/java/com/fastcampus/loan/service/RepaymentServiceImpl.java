@@ -3,6 +3,7 @@ package com.fastcampus.loan.service;
 import com.fastcampus.loan.domain.Application;
 import com.fastcampus.loan.domain.Entry;
 import com.fastcampus.loan.domain.Repayment;
+import com.fastcampus.loan.dto.BalanceDTO;
 import com.fastcampus.loan.dto.BalanceDTO.*;
 import com.fastcampus.loan.dto.RepaymentDTO;
 import com.fastcampus.loan.exception.BaseException;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,6 +62,41 @@ public class RepaymentServiceImpl implements RepaymentService{
         List<Repayment> repayments = repaymentRepository.findAllByApplicationId(applicationId);
 
         return repayments.stream().map(r->modelMapper.map(r, RepaymentDTO.ListResponse.class)).collect(Collectors.toList());
+
+    }
+
+    @Override
+    public RepaymentDTO.UpdateResponse update(Long repaymentId, RepaymentDTO.Request request) {
+        Repayment repayment = repaymentRepository.findById(repaymentId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+        Long applicationId = repayment.getApplicationId();
+        BigDecimal beforeRepaymentAmount = repayment.getRepaymentAmount();
+
+        // 500 - 100 = 400
+        // 400 + 100 = 500
+
+        // 500 = 200 = 300
+
+        balanceService.repaymentUpdate(applicationId, BalanceDTO.RepaymentRequest.builder()
+                .repaymentAmount(beforeRepaymentAmount)
+                .type(RepaymentType.ADD)
+                .build());
+        repayment.setRepaymentAmount(request.getRepaymentAmount());
+        repaymentRepository.save(repayment);
+
+        Response updatedBalance = balanceService.repaymentUpdate(applicationId, builder()
+                .repaymentAmount(request.getRepaymentAmount())
+                .type(RepaymentType.REMOVE).build());
+
+        return RepaymentDTO.UpdateResponse.builder()
+                .applicationId(applicationId)
+                .beforeRepaymentAmount(beforeRepaymentAmount)
+                .afterRepaymentAmount(request.getRepaymentAmount())
+                .balance(updatedBalance.getBalance())
+                .createdAt(repayment.getCreatedAt())
+                .updatedAt(repayment.getUpdatedAt())
+                .build();
 
     }
 
